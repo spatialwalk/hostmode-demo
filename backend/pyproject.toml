@@ -1,0 +1,26 @@
+[project]
+name = "hostmode-demo-backend"
+version = "0.1.0"
+description = "Python WebSocket backend for the SpatialReal Host Mode demo"
+requires-python = ">=3.11"
+dependencies = [
+  "avatarkit",
+  "fastapi>=0.115,<1.0",
+  "python-dotenv>=1.0,<2.0",
+  "uvicorn[standard]>=0.32,<1.0",
+  "websockets>=14,<16",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<1.0",
+  "pytest>=8.0,<9.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Host Mode Demo</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="control-panel">
+        <div class="panel-chip">Host Mode</div>
+
+        <div class="control-group">
+          <button id="prepare-button" class="primary-button">Initialize</button>
+          <button id="mic-button" class="secondary-button" disabled>Mic</button>
+        </div>
+
+        <form id="prompt-form" class="prompt-form">
+          <div class="prompt-row">
+            <input
+              id="prompt-input"
+              type="text"
+              placeholder="Send a text prompt"
+              maxlength="300"
+            />
+            <button id="prompt-submit" class="primary-button" type="submit" disabled>
+              Send
+            </button>
+          </div>
+        </form>
+      </aside>
+
+      <main class="stage-zone">
+        <section class="stage-topbar">
+          <div id="status-text" class="status-value">Ready to initialize</div>
+          <div id="connection-pill" class="connection-pill" data-state="offline">offline</div>
+        </section>
+
+        <section class="stage-card">
+          <div id="avatar-container" class="avatar-container"></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
