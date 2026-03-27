@@ -22,8 +22,11 @@ class AvatarTurnEvent:
 
 
 class AvatarTurn:
-    def __init__(self, settings: Settings, turn_id: str) -> None:
+    def __init__(self, settings: Settings, turn_id: str, avatar_id: str | None = None) -> None:
         self._settings = settings
+        # If avatar_id is provided (e.g. via client set_avatar message), use it;
+        # otherwise fall back to the default from .env / settings.
+        self._avatar_id = avatar_id or settings.avatar_id
         self.turn_id = turn_id
         self._queue: asyncio.Queue[AvatarTurnEvent] = asyncio.Queue(maxsize=256)
         self._session = None
@@ -65,7 +68,7 @@ class AvatarTurn:
             app_id=self._settings.avatar_app_id,
             console_endpoint_url=self._settings.avatar_console_endpoint,
             ingress_endpoint_url=self._settings.avatar_ingress_endpoint,
-            avatar_id=self._settings.avatar_id,
+            avatar_id=self._avatar_id,
             expire_at=datetime.now(timezone.utc) + timedelta(minutes=5),
             sample_rate=self._settings.avatar_output_sample_rate,
             bitrate=0,

@@ -29,6 +29,7 @@ class BrowserSession:
         self._avatar_turn: AvatarTurn | None = None
         self._avatar_turn_task: asyncio.Task[None] | None = None
         self._active_turn_id: str | None = None
+        self._client_avatar_id: str | None = None
 
     async def run(self) -> None:
         await self._websocket.accept()
@@ -63,8 +64,17 @@ class BrowserSession:
 
     async def _handle_client_message(self, payload: dict[str, Any]) -> None:
         kind = payload.get("type")
+        logger.info("Client message: %s", kind)
         if kind == "ping":
             await self._send({"type": "pong"})
+            return
+        if kind == "set_avatar":
+            # Allow clients to dynamically override the avatar ID from .env.
+            # If not sent, _start_avatar_turn falls back to settings.avatar_id.
+            avatar_id = str(payload.get("avatarId", "")).strip()
+            if avatar_id:
+                self._client_avatar_id = avatar_id
+                await self._send_status(f"Avatar ID set to: {avatar_id}")
             return
         if kind == "text_query":
             text = str(payload.get("text", "")).strip()
@@ -206,7 +216,7 @@ class BrowserSession:
     async def _start_avatar_turn(self) -> None:
         await self._close_avatar_turn()
         turn_id = str(uuid4())
-        turn = AvatarTurn(self._settings, turn_id=turn_id)
+        turn = AvatarTurn(self._settings, turn_id=turn_id, avatar_id=self._client_avatar_id)
         await turn.start()
         self._avatar_turn = turn
         self._active_turn_id = turn_id
